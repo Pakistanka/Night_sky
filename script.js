@@ -5,19 +5,51 @@ const StarSky = {
     nightBack: null,
     top: 0,
     left: 0,
-    maxStars: 900,
+    maxStars: 1000,
+    angle: 0,
 
+  },
+
+  Data: {
+
+    Layer2: null,
+  },
+
+  Rotate: {
+
+    Data: {
+
+      angle: 0,
+      angleStep: 0.01,
+      interval: 10,
+    },
+
+    init: function() {
+
+      setInterval(this.step, this.Data.interval)
+    },
+
+    getAngle: function() {
+      if(this.Data.angle >= 360){
+        this.Data.angle = 0;
+      }
+      this.Data.angle += this.Data.angleStep;
+      return this.Data.angle;
+    },
+
+    step: function() {
+
+      let layer = StarSky.Data.Layer2;
+
+      layer.style.transform = 'rotate(' + StarSky.Rotate.getAngle() + 'deg)';
+    },
   },
 
   init: function() {
 
     this.Config.nightBack = document.getElementsByTagName('body')[0];
-    this.nightSky();
     this.showStars();
-  },
-
-  nightSky: function() {
-    let createSky = this.Config.nightBack;
+    this.Rotate.init();
   },
 
   showStars: function() {
@@ -29,8 +61,22 @@ const StarSky = {
     layer_1.classList.add('layer_1');
 
     let layer_2 = document.createElement('div');
-    layer_2.classList.add('wrapper');
+    layer_2.classList.add('layer_2');
 
+    let skyWidth = window.innerWidth;
+        skyHeight = window.innerHeight;
+        diagonal = Math.sqrt(Math.pow(skyWidth, 2) + Math.pow(skyHeight, 2));
+
+
+
+    let deltaWidth = -(diagonal - skyWidth) / 2;
+        deltaHeight = -(diagonal - skyHeight) / 2;
+
+        layer_2.style.height = diagonal + "px";
+        layer_2.style.width = diagonal + "px";
+
+        layer_2.style.top = deltaHeight + 'px';
+        layer_2.style.left = deltaWidth + 'px';
 
 
       for(let i = 1; i < maxStar; i++) {
@@ -38,8 +84,8 @@ const StarSky = {
         let star = document.createElement('div');
         star.classList.add('star');
 
-        let left = Math.round(Math.random() * (window.innerWidth - 15))  + 'px';
-        let top = Math.round(Math.random() * (window.innerHeight - 15))  + 'px';
+        let left = Math.round(Math.random() * diagonal)  + 'px';
+        let top = Math.round(Math.random() * diagonal)  + 'px';
 
         star.style.left = left;
         star.style.top = top;
@@ -69,52 +115,10 @@ const StarSky = {
           layer_2.appendChild(star);
       }
 
-      let rotateSky = function() {
-        let skyWidth = window.innerWidth;
-            skyHeight = window.innerHeight;
-            diagonal = parseInt((skyWidth * skyWidth) + (skyHeight * skyHeight));
-
-        // Высчитать время поворота
-        let getTime = function(){
-          let time = new Date().getTime() * 0.0002;
-        }
-
-        // Высчитать угол
-        let getAngleToRAD = function(){
-          let angle = 0;
-
-          if(angle === 360) {
-            angle = 0;
-          }
-          return angle++ * Math.PI / 180;
-        }
-
-        // Анимация
-        let step = function(){
-          setTimeout (function() {
-            requestAnimationFrame(step);
-
-            let skyWidth = diagonal;
-                skyHeight = diagonal;
-                currentAngle = getAngleToRAD();
-                tx = 0;
-                ty = 0;
-
-            // container.style.transform =  'matrix(' + Math.cos(currentAngle) + ',' + Math.sin(currentAngle) + ',' + -Math.sin(currentAngle) + ',' + Math.cos(currentAngle) + ',' + tx + ',' + tx + ')';
-
-            // console.log(skyWidth);
-            // console.log(skyHeight);
-
-
-          }, getTime());
-        }
-        step();
-      }
-
-      rotateSky();
-
     document.body.appendChild(layer_1);
     document.body.appendChild(layer_2);
+
+    this.Data.Layer2 = layer_2;
   }
 
 }
