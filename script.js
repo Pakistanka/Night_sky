@@ -68,11 +68,54 @@ const StarSky = {
 
           layer_2.appendChild(star);
       }
+
+      let rotateSky = function() {
+        let skyWidth = window.innerWidth;
+            skyHeight = window.innerHeight;
+            diagonal = parseInt((skyWidth * skyWidth) + (skyHeight * skyHeight));
+
+        // Высчитать время поворота
+        let getTime = function(){
+          let time = new Date().getTime() * 0.0002;
+        }
+
+        // Высчитать угол
+        let getAngleToRAD = function(){
+          let angle = 0;
+
+          if(angle === 360) {
+            angle = 0;
+          }
+          return angle++ * Math.PI / 180;
+        }
+
+        // Анимация
+        let step = function(){
+          setTimeout (function() {
+            requestAnimationFrame(step);
+
+            let skyWidth = diagonal;
+                skyHeight = diagonal;
+                currentAngle = getAngleToRAD();
+                tx = 0;
+                ty = 0;
+
+            // container.style.transform =  'matrix(' + Math.cos(currentAngle) + ',' + Math.sin(currentAngle) + ',' + -Math.sin(currentAngle) + ',' + Math.cos(currentAngle) + ',' + tx + ',' + tx + ')';
+
+            // console.log(skyWidth);
+            // console.log(skyHeight);
+
+
+          }, getTime());
+        }
+        step();
+      }
+
+      rotateSky();
+
     document.body.appendChild(layer_1);
     document.body.appendChild(layer_2);
-  },
-
-
+  }
 
 }
 
