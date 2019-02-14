@@ -1,5 +1,12 @@
+html {
+  overflow: hidden;
+}
 .body {
   background-color: darkblue;
+  background-image: radial-gradient(circle, #051937, #011f49, #00245a, #06286c, #152c7e);
+  min-width: 100%;
+  min-height: 100%;
+  overflow: hidden;
 }
 .layer_1 {
   position:absolute;
@@ -8,11 +15,11 @@
   width:100%;
   height: 100%;
   background-color: darkblue;
-  background-image: radial-gradient(circle, #051937, #011f49, #00245a, #06286c, #152c7e);
+  /* background-image: radial-gradient(circle, #051937, #011f49, #00245a, #06286c, #152c7e); */
 
 }
 
-.wrapper{
+.layer_2{
   position:absolute;
   top:0;
   z-index: 2;
@@ -20,6 +27,7 @@
   width:100%;
   height: 100%;
   animation: rotation 200s infinite;
+  background-image: radial-gradient(circle, #051937, #011f49, #00245a, #06286c, #152c7e);
 }
 
 .star {
