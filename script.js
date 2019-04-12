@@ -5,20 +5,51 @@ const StarSky = {
     nightBack: null,
     top: 0,
     left: 0,
-    maxStars: 900,
+    maxStars: 1000,
+    angle: 0,
 
+  },
+
+  Data: {
+
+    Layer2: null,
+  },
+
+  Rotate: {
+
+    Data: {
+
+      angle: 0,
+      angleStep: 0.01,
+      interval: 10,
+    },
+
+    init: function() {
+
+      setInterval(this.step, this.Data.interval)
+    },
+
+    getAngle: function() {
+      if(this.Data.angle >= 360){
+        this.Data.angle = 0;
+      }
+      this.Data.angle += this.Data.angleStep;
+      return this.Data.angle;
+    },
+
+    step: function() {
+
+      let layer = StarSky.Data.Layer2;
+
+      layer.style.transform = 'rotate(' + StarSky.Rotate.getAngle() + 'deg)';
+    },
   },
 
   init: function() {
 
     this.Config.nightBack = document.getElementsByTagName('body')[0];
-    this.nightSky();
     this.showStars();
-  },
-
-  nightSky: function() {
-    let createSky = this.Config.nightBack;
-    createSky.style.backgroundColor[0] = "darkblue";
+    this.Rotate.init();
   },
 
   showStars: function() {
@@ -27,65 +58,68 @@ const StarSky = {
     let container = this.Config.nightBack;
 
     let layer_1 = document.createElement('div');
-    layer_1.style.cssText="position:absolute;\
-    top:0;\
-    left:0;\
-    width:100%;\
-    height: 100%;\
-    background-color: dargblue;\
-    background-image: radial-gradient(circle, #051937, #011f49, #00245a, #06286c, #152c7e);\
-    ";
+    layer_1.classList.add('layer_1');
 
     let layer_2 = document.createElement('div');
-    layer_2.style.cssText="position:absolute;\
-    top:0;\
-    z-index: 2;\
-    left:0;\
-    width:100%;\
-    height: 100%;\
-    ";
-    layer_2.classList.add('wrapper');
+    layer_2.classList.add('layer_2');
 
+    let skyWidth = window.innerWidth;
+        skyHeight = window.innerHeight;
+        diagonal = Math.sqrt(Math.pow(skyWidth, 2) + Math.pow(skyHeight, 2));
+
+
+
+    let deltaWidth = -(diagonal - skyWidth) / 2;
+        deltaHeight = -(diagonal - skyHeight) / 2;
+
+        layer_2.style.height = diagonal + "px";
+        layer_2.style.width = diagonal + "px";
+
+        layer_2.style.top = deltaHeight + 'px';
+        layer_2.style.left = deltaWidth + 'px';
 
 
       for(let i = 1; i < maxStar; i++) {
 
         let star = document.createElement('div');
+        star.classList.add('star');
 
-        let left = Math.round(Math.random() * (window.innerWidth - 15))  + 'px';
-        let top = Math.round(Math.random() * (window.innerHeight - 15))  + 'px';
+        let left = Math.round(Math.random() * diagonal)  + 'px';
+        let top = Math.round(Math.random() * diagonal)  + 'px';
 
-
-        star.style.cssText="width: 10px;\
-          height: 10px;\
-          border-radius: 5px;\
-          position: absolute;\
-          background-color: #F3F011;\
-          display:block;\
-          box-shadow: 0 0 0 rgba(204,169,44, 0.4);\
-          ";
-          star.style.left = left;
-          star.style.top = top;
+        star.style.left = left;
+        star.style.top = top;
 
 
-          container.addEventListener('mousemove', function(e){
-            let pageX = e.clientX,
-                pageY = e.clientY;
+        let starColor = function(){
+          let letters = 'ABCDE'.split('');
+          let color = '#';
+          for (let j = 0; j < 3; j++) {
+            color += letters[Math.floor(Math.random() * letters.length)];
+          }
+          return color;
+        }
 
-            layer_1.style.transform = 'translateX(' + pageX/1000 + '%) translateY(' + pageY/100 + '%)';
-            layer_2.style.transform = 'translateX(' + pageX/1500 + '%) translateY(' + pageY/250 + '%)';
-
-            container.style = 'background-position:' + pageX/2000 + 'px center';
-          })
+        star.style.backgroundColor = starColor();
+          // container.addEventListener('mousemove', function(e){
+          //   let pageX = e.clientX,
+          //       pageY = e.clientY;
+          //
+          //   layer_1.style.transform = 'translateX(' + pageX/1000 + '%) translateY(' + pageY/100 + '%)';
+          //   layer_2.style.transform = 'translateX(' + pageX/1500 + '%) translateY(' + pageY/250 + '%)';
+          //
+          //   container.style = 'background-position:' + pageX/2000 + 'px center';
+          // })
 
 
           layer_2.appendChild(star);
       }
+
     document.body.appendChild(layer_1);
     document.body.appendChild(layer_2);
-  },
 
-
+    this.Data.Layer2 = layer_2;
+  }
 
 }
 
