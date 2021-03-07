@@ -1,5 +1,5 @@
 # Night_sky
 
-It is a self-created project based on JavaScript. Alse, CSS was added for styling.
+It is a self-created project based on JavaScript. Also, CSS was added for styling.
 
-You can see the project at https://pakistanka.github.io/Night_sky/
+Please, click and relax https://pakistanka.github.io/Night_sky/
